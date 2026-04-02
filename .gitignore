@@ -1,0 +1,13 @@
+# Root ignores
+node_modules/
+target/
+dist/
+.vscode/
+.DS_Store
+uploads/
+**/logs/
+*.log
+*.tmp
+*.bak
+.idea/
+*.iml
