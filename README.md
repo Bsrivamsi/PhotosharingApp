@@ -279,7 +279,9 @@ You can deploy PhotoTribe fully on free-tier tools. The most common setup is:
 
 Important for production routing:
 
-- Since frontend currently uses relative `/api` paths, deploy frontend and backend behind the same domain/reverse proxy, or update frontend API base handling for separate domains.
+- Frontend supports `VITE_API_BASE` for deployed backend URLs.
+- Example file: `frontend/.env.example`
+- Backend CORS is controlled by `APP_CORS_ALLOWED_ORIGIN_PATTERNS`.
 
 ### Option 1: Quick Demo Deployment (Fastest)
 
@@ -291,6 +293,7 @@ This is easiest to get online quickly.
    - Build command: `mvn clean package -DskipTests`
    - Start command: `mvn spring-boot:run`
    - Add environment variables for JWT secret and any app configs.
+   - You can also use the included `render.yaml` blueprint from repo root.
 
 2. Deploy frontend to Vercel:
    - Import your repo.
@@ -303,6 +306,11 @@ This is easiest to get online quickly.
    - Allow your deployed frontend domain (Vercel or Netlify URL), not only localhost.
 
 4. Redeploy backend and frontend.
+
+For Netlify instead of Vercel:
+
+- Use `frontend/netlify.toml`
+- Set frontend environment variable `VITE_API_BASE`
 
 Important note:
 
@@ -369,6 +377,7 @@ Add these environment variables in Render:
 - SPRING_DATASOURCE_URL=jdbc:mysql://your-db-host:3306/photosharing?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 - SPRING_DATASOURCE_USERNAME=your_db_username
 - SPRING_DATASOURCE_PASSWORD=your_db_password
+- APP_CORS_ALLOWED_ORIGIN_PATTERNS=https://your-netlify-site.netlify.app
 
 If you deploy with H2 (demo only), you can skip datasource variables and use:
 

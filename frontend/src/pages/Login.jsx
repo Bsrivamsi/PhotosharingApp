@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
-const API_URL = '/api/auth';
+import { AUTH_API } from '../api';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -23,7 +22,7 @@ function Login() {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const response = await fetch(`${AUTH_API}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,20 +1,28 @@
 package com.photoshare.controller;
 
-import com.photoshare.dto.PhotoDto;
-import com.photoshare.model.Photo;
-import com.photoshare.repository.PhotoRepository;
-import com.photoshare.service.PhotoService;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.photoshare.dto.PhotoDto;
+import com.photoshare.model.Photo;
+import com.photoshare.repository.PhotoRepository;
+import com.photoshare.service.PhotoService;
 
 @RestController
 @RequestMapping("/api/photos")
@@ -58,8 +66,9 @@ public class PhotoController {
     }
 
     private PhotoDto toDto(Photo photo) {
-        String thumbnailUrl = "http://localhost:8080/api/photos/files/" + photo.getThumbnailFilename();
-        String photoUrl = "http://localhost:8080/api/photos/files/" + photo.getOriginalFilename();
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        String thumbnailUrl = baseUrl + "/api/photos/files/" + photo.getThumbnailFilename();
+        String photoUrl = baseUrl + "/api/photos/files/" + photo.getOriginalFilename();
         return new PhotoDto(photo.getId(), photo.getTitle(), photo.getDescription(), photo.getUploader(), thumbnailUrl, photoUrl, photo.getUploadedAt());
     }
 }

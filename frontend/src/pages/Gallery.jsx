@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const API_BASE = '/api';
+import { API_BASE } from '../api';
 
 const samplePhotos = [
   {
