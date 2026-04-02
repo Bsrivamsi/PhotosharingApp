@@ -1,11 +1,10 @@
 services:
   - type: web
     name: phototribe-backend
-    env: java
+    env: docker
     rootDir: backend
     plan: free
-    buildCommand: mvn clean package -DskipTests
-    startCommand: mvn spring-boot:run -Dspring-boot.run.profiles=dev
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: dev
