@@ -10,7 +10,7 @@ PhotoTribe combines a secure Spring Boot backend with a React frontend to provid
 - Photo upload with thumbnail generation
 - Public gallery with sample and uploaded photos
 - Auto-scrolling preview strip and modern card-based UI
-- Upload preview with auto-generated one-line description based on photo title + image analysis
+- Upload preview with AI-style one-line description generated from photo title + image analysis
 
 ## Tech Stack
 
@@ -39,7 +39,12 @@ photo-sharing-app/
 │     │  └─ PhotoSharingApplication.java
 │     └─ resources/
 │        ├─ application.properties
+│        ├─ application-dev.properties
+│        ├─ application-test.properties
+│        ├─ application-prod.properties
 │        └─ application-mysql.properties
+│  ├─ api-templates.http
+│  └─ rest-client.env.json
 ├─ frontend/
 │  ├─ package.json
 │  ├─ vite.config.js
@@ -84,7 +89,17 @@ Option A (Windows quick start):
 
 ```bat
 cd backend
-run-backend.bat
+run-backend.bat dev
+```
+
+`run-backend.bat` accepts profile argument: `dev`, `test`, or `prod`.
+
+Profile examples with one command:
+
+```bat
+run-backend.bat dev
+run-backend.bat test
+run-backend.bat prod
 ```
 
 Option B (standard Maven):
@@ -121,7 +136,8 @@ Frontend starts at:
 ## How Auth Works
 
 - Register/Login endpoints are served by backend under `/api/auth/*`.
-- Frontend uses Vite proxy for `/api` calls in development.
+- Frontend calls relative `/api` routes.
+- In local development, Vite proxy forwards `/api` to backend (`http://localhost:8080`).
 - On successful login/register, JWT token is saved in browser local storage.
 
 ## Database Information
@@ -140,6 +156,68 @@ You can run with MySQL profile using `application-mysql.properties` and:
 cd backend
 mvn spring-boot:run -Dspring-boot.run.profiles=mysql
 ```
+
+For production profile, prefer environment variables (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`) through `application-prod.properties`.
+
+## Spring Profiles (dev / test / prod)
+
+Profile segregation is configured with:
+
+- `backend/src/main/resources/application.properties` (common + active profile selector)
+- `backend/src/main/resources/application-dev.properties`
+- `backend/src/main/resources/application-test.properties`
+- `backend/src/main/resources/application-prod.properties`
+
+Active profile behavior:
+
+- Default profile: `dev`
+- Controlled by env var: `SPRING_PROFILES_ACTIVE`
+
+Examples:
+
+```bash
+# Run with dev profile (default)
+cd backend
+mvn spring-boot:run
+
+# Run with test profile
+mvn spring-boot:run -Dspring-boot.run.profiles=test
+
+# Run with prod profile
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+Windows batch shortcuts:
+
+```bat
+cd backend
+run-backend.bat dev
+run-backend.bat test
+run-backend.bat prod
+```
+
+## REST Templates For All HTTP Methods
+
+The project includes REST Client templates for GET, POST, PUT, PATCH, DELETE, OPTIONS, and HEAD.
+
+Files:
+
+- `backend/api-templates.http`
+- `backend/rest-client.env.json`
+
+Environment data included:
+
+- `dev`
+- `test`
+- `prod`
+
+How to use in VS Code:
+
+1. Install the REST Client extension.
+2. Open `backend/api-templates.http`.
+3. Select environment (`dev`, `test`, or `prod`) from REST Client environment selector.
+4. Update values in `backend/rest-client.env.json` (base URL, credentials, JWT).
+5. Run any request template directly from the editor.
 
 ## API Overview
 
@@ -165,7 +243,7 @@ If photos do not persist after restart:
 
 - Attractive responsive UI with hero, preview strip, and photo cards
 - Smart upload preview card
-- Auto-generated one-line description based on image analysis
+- AI-style one-line description based on title + image analysis (orientation, mood, color, contrast)
 - Latest uploads shown first in scrollers and card feeds
 - "See more" progressive card reveal in gallery
 
@@ -198,6 +276,10 @@ You can deploy PhotoTribe fully on free-tier tools. The most common setup is:
 - Backend: Render Web Service (free)
 - Database: H2 (quick demo) or Neon Postgres (free, persistent)
 - Image storage: local filesystem for demo, Cloudinary free plan for production-like usage
+
+Important for production routing:
+
+- Since frontend currently uses relative `/api` paths, deploy frontend and backend behind the same domain/reverse proxy, or update frontend API base handling for separate domains.
 
 ### Option 1: Quick Demo Deployment (Fastest)
 

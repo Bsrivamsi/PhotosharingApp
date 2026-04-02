@@ -1,0 +1,129 @@
+###
+### PhotoTribe API templates for VS Code REST Client
+### Select environment in REST Client: dev | test | prod
+### Uses variables from ./rest-client.env.json
+###
+
+@baseUrl = {{baseUrl}}
+@jwt = {{jwt}}
+@username = {{username}}
+@email = {{email}}
+@password = {{password}}
+@photoId = {{photoId}}
+
+### DEV - Register (POST)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### TEST - Register (POST)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### PROD - Register (POST)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### DEV - Login (POST)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### DEV - Get Photos (GET)
+GET {{baseUrl}}/api/photos
+
+### DEV - Upload Photo (POST multipart)
+POST {{baseUrl}}/api/photos/upload
+Authorization: Bearer {{jwt}}
+Content-Type: multipart/form-data; boundary=PhotoBoundary
+
+--PhotoBoundary
+Content-Disposition: form-data; name="title"
+
+REST Template Upload
+--PhotoBoundary
+Content-Disposition: form-data; name="description"
+
+Uploaded using API template.
+--PhotoBoundary
+Content-Disposition: form-data; name="file"; filename="sample.jpg"
+Content-Type: image/jpeg
+
+< ./sample.jpg
+--PhotoBoundary--
+
+### DEV - Replace Photo (PUT) [template endpoint, update as needed]
+PUT {{baseUrl}}/api/photos/{{photoId}}
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "description": "Updated via PUT"
+}
+
+### DEV - Partial Update Photo (PATCH) [template endpoint, update as needed]
+PATCH {{baseUrl}}/api/photos/{{photoId}}
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{
+  "description": "Updated via PATCH"
+}
+
+### DEV - Delete Photo (DELETE) [template endpoint, update as needed]
+DELETE {{baseUrl}}/api/photos/{{photoId}}
+Authorization: Bearer {{jwt}}
+
+### DEV - Options on Photos (OPTIONS)
+OPTIONS {{baseUrl}}/api/photos
+Origin: http://localhost:5173
+Access-Control-Request-Method: GET
+
+### DEV - Head on Photos (HEAD)
+HEAD {{baseUrl}}/api/photos
+
+### TEST - Get Photos (GET)
+GET {{baseUrl}}/api/photos
+
+### TEST - Login (POST)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### PROD - Get Photos (GET)
+GET {{baseUrl}}/api/photos
+
+### PROD - Login (POST)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
