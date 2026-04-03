@@ -8,5 +8,9 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: dev
+      - key: JWT_SECRET_BASE64
+        value: REPLACE_WITH_A_LONG_BASE64_SECRET
+      - key: JWT_EXPIRATION_MS
+        value: "86400000"
       - key: APP_CORS_ALLOWED_ORIGIN_PATTERNS
         value: https://your-netlify-site.netlify.app

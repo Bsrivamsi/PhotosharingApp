@@ -11,6 +11,20 @@ PhotoTribe combines a secure Spring Boot backend with a React frontend to provid
 - Public gallery with sample and uploaded photos
 - Auto-scrolling preview strip and modern card-based UI
 - Upload preview with AI-style one-line description generated from photo title + image analysis
+- Role-based Admin and Moderator dashboards
+- Server-side pagination and filtering for admin tables
+- Photo moderation queue with approve/reject actions
+- Auto-approval for pending photos after 30 seconds when no admin action occurs
+- Analytics dashboard with traffic, user activity, photo stats, and category distribution charts
+
+## Latest Updates (April 2026)
+
+- Added role permissions for `ROLE_ADMIN` and `ROLE_MODERATOR`
+- Added server-side pagination/search/filter for Users, Photos, Pending Photos, Categories, and Activity Logs
+- Added moderation flow for uploaded photos (`PENDING` -> `APPROVED`/`REJECTED`)
+- Added scheduled auto-approval for photos that remain `PENDING` for over 30 seconds
+- Added analytics charts section in admin dashboard and fixed chart rendering for all screen sizes
+- Added real category distribution data in analytics based on uploaded photos
 
 ## Tech Stack
 
@@ -51,12 +65,18 @@ photo-sharing-app/
 │  ├─ index.html
 │  ├─ public/
 │  └─ src/
+│     ├─ components/
+│     │  └─ AdminAnalyticsCharts.jsx
 │     ├─ App.jsx
 │     ├─ App.css
 │     ├─ main.jsx
 │     └─ pages/
+│        ├─ About.jsx
+│        ├─ AdminDashboard.jsx
+│        ├─ Categories.jsx
 │        ├─ Gallery.jsx
 │        ├─ Login.jsx
+│        ├─ Profile.jsx
 │        └─ Register.jsx
 └─ uploads/
    └─ thumbnails/
@@ -225,6 +245,14 @@ How to use in VS Code:
 - `POST /api/auth/login` - login and receive JWT
 - `GET /api/photos` - list photos (public)
 - `POST /api/photos/upload` - upload photo (requires JWT)
+- `GET /api/admin/analytics/dashboard` - admin analytics summary and chart data
+- `GET /api/admin/users` - paginated users list with search/filter
+- `GET /api/admin/photos` - paginated photos list with search/filter
+- `GET /api/admin/photos/pending` - paginated moderation queue
+- `POST /api/admin/photos/{id}/approve` - approve pending photo
+- `POST /api/admin/photos/{id}/reject` - reject pending photo
+- `GET /api/admin/categories` - paginated categories list
+- `GET /api/admin/activity-logs` - paginated activity logs
 
 ## Troubleshooting
 
@@ -417,6 +445,68 @@ In backend CORS config, allow your deployed frontend domain(s), for example:
 
 - https://your-app.vercel.app
 - https://your-app.netlify.app
+
+## Render + Netlify Deployment (Recommended)
+
+Use this exact flow to deploy backend on Render and frontend on Netlify.
+
+### 1. Push latest code
+
+```bash
+git add .
+git commit -m "Prepare Render and Netlify deployment"
+git push origin main
+```
+
+### 2. Deploy backend on Render
+
+1. Open Render and choose **New +** -> **Blueprint**.
+2. Connect this GitHub repository.
+3. Render will detect `render.yaml` and create `phototribe-backend`.
+4. In Render service environment variables, set:
+   - `SPRING_PROFILES_ACTIVE=dev`
+   - `JWT_SECRET_BASE64=<your base64 secret>`
+   - `JWT_EXPIRATION_MS=86400000`
+   - `APP_CORS_ALLOWED_ORIGIN_PATTERNS=https://<your-site>.netlify.app`
+5. Deploy and wait for service status **Live**.
+6. Copy backend URL, for example: `https://phototribe-backend.onrender.com`.
+
+Generate a base64 secret locally (PowerShell):
+
+```powershell
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("replace-this-with-a-very-long-random-secret-at-least-32-chars"))
+```
+
+### 3. Deploy frontend on Netlify
+
+1. Open Netlify and choose **Add new site** -> **Import an existing project**.
+2. Select this repository.
+3. Set base directory to `frontend`.
+4. Build command: `npm run build`.
+5. Publish directory: `dist`.
+6. Add environment variable:
+   - `VITE_API_BASE=https://phototribe-backend.onrender.com/api`
+7. Deploy site.
+
+### 4. Final CORS update on Render
+
+After Netlify gives your final URL, update Render env var:
+
+- `APP_CORS_ALLOWED_ORIGIN_PATTERNS=https://<your-final-site>.netlify.app`
+
+Then redeploy backend once.
+
+### 5. Verify deployment
+
+1. Open Netlify URL.
+2. Register a new user.
+3. Login and upload a photo.
+4. Open admin dashboard and verify moderation/analytics pages load.
+
+### Notes
+
+- `dev` profile uses H2 in-memory database. Data resets on backend restart/sleep.
+- For persistent data later, switch to managed database and set datasource env vars.
 
 Do not keep only localhost entries for production.
 
