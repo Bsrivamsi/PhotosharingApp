@@ -280,6 +280,43 @@ a:hover,
   align-items: center;
   gap: 0.85rem;
   padding: 0.95rem 1rem 1.1rem;
+
+.share-link-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.share-link-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.facebook-share {
+  background: #1877f2;
+}
+
+.twitter-share {
+  background: #111827;
+}
+
+.linkedin-share {
+  background: #0a66c2;
+}
+
+.email-share {
+  background: #ef4444;
+}
+
+.whatsapp-share {
+  background: #25d366;
+}
 }
 
 .preview-avatar {
