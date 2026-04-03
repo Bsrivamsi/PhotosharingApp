@@ -503,7 +503,7 @@ function Gallery({ token, username }) {
     fetchPhotos();
   };
 
-  const handleDownload = async (photoId, title) => {
+  const handleDownload = async (photoId, title, photoUrl) => {
     try {
       if (token) {
         await fetch(`${API_BASE}/photos/${photoId}/download`, {
@@ -516,11 +516,23 @@ function Gallery({ token, username }) {
     } catch (error) {
       console.error('Error recording download:', error);
     }
-    // Trigger download
-    const link = document.createElement('a');
-    link.href = document.querySelector(`[data-photo-url="${photoId}"]`)?.src || '';
-    link.download = `${title}.jpg`;
-    link.click();
+    const downloadUrl = photoUrl || '';
+    if (!downloadUrl) return;
+    try {
+      const res = await fetch(downloadUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${title || 'photo'}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch {
+      // Fallback for cross-origin images that block fetch: open in new tab
+      window.open(downloadUrl, '_blank');
+    }
   };
 
   const handleShare = async (photoId) => {
@@ -759,7 +771,7 @@ function Gallery({ token, username }) {
                   </div>
                   <div className="card-actions">
                     <a href={photo.photoUrl} target="_blank" rel="noreferrer">View full image</a>
-                    <button onClick={() => handleDownload(photo.id, photo.title)} className="action-btn download-btn" title="Download photo">
+                    <button onClick={() => handleDownload(photo.id, photo.title, photo.photoUrl)} className="action-btn download-btn" title="Download photo">
                       <FaDownload /> Download
                     </button>
                   </div>
