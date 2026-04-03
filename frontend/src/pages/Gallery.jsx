@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { FaDownload, FaShare } from 'react-icons/fa';
 import { API_BASE } from '../api';
@@ -153,6 +154,7 @@ function Gallery({ token, username }) {
   const [cardsPerRow, setCardsPerRow] = useState(1);
   const [shareMenuId, setShareMenuId] = useState(null);
   const [shareMenuPlacement, setShareMenuPlacement] = useState({});
+  const [shareButtonRect, setShareButtonRect] = useState(null);
   const [qrPhotoId, setQrPhotoId] = useState(null);
   const [editFilters, setEditFilters] = useState({
     brightness: 100,
@@ -770,7 +772,7 @@ function Gallery({ token, username }) {
                     <span>{photo.uploadedAt ? new Date(photo.uploadedAt).toLocaleDateString() : ''}</span>
                   </div>
                   <div className="card-actions">
-                    <a href={photo.photoUrl} target="_blank" rel="noreferrer">View full image</a>
+                    <a href={photo.photoUrl} target="_blank" rel="noreferrer" className="action-btn view-btn">View full image</a>
                     <button onClick={() => handleDownload(photo.id, photo.title, photo.photoUrl)} className="action-btn download-btn" title="Download photo">
                       <FaDownload /> Download
                     </button>
@@ -786,6 +788,9 @@ function Gallery({ token, username }) {
                           if (nextMenuId) {
                             const placement = getShareMenuPlacement(event.currentTarget);
                             setShareMenuPlacement((prev) => ({ ...prev, [photo.id]: placement }));
+                            setShareButtonRect(event.currentTarget.getBoundingClientRect());
+                          } else {
+                            setShareButtonRect(null);
                           }
                           setShareMenuId(nextMenuId);
                         }} 
@@ -794,17 +799,20 @@ function Gallery({ token, username }) {
                       >
                         <FaShare />
                       </button>
-                      {shareMenuId === photo.id && (
-                        <Suspense fallback={<div className="share-menu" style={{minWidth: 'auto', padding: '0.5rem'}}>Loading...</div>}>
-                          <SharePanel
-                            photo={photo}
-                            qrPhotoId={qrPhotoId}
-                            setQrPhotoId={setQrPhotoId}
-                            placement={shareMenuPlacement[photo.id] || 'right'}
-                          />
-                        </Suspense>
-                      )}
                     </div>
+                    {shareMenuId === photo.id && shareButtonRect && createPortal(
+                      <Suspense fallback={null}>
+                        <SharePanel
+                          photo={photo}
+                          qrPhotoId={qrPhotoId}
+                          setQrPhotoId={setQrPhotoId}
+                          placement={shareMenuPlacement[photo.id] || 'right'}
+                          buttonRect={shareButtonRect}
+                          onClose={() => { setShareMenuId(null); setShareButtonRect(null); }}
+                        />
+                      </Suspense>,
+                      document.body
+                    )}
                     <FollowButton targetUsername={photo.uploader} token={token} currentUsername={username} isDemo={isDemoPhoto} />
                     <LikeButton photoId={photo.id} token={token} username={username} isDemo={isDemoPhoto} />
                     <CommentsSection photoId={photo.id} token={token} username={username} compact={true} isDemo={isDemoPhoto} />

@@ -283,14 +283,18 @@ a:hover,
 }
 
 .share-link-btn {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #fff;
+  color: #fff !important;
+  padding: 0 !important;
+  border: none !important;
+  background-clip: padding-box;
+  flex-shrink: 0;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -619,6 +623,10 @@ a:hover,
   letter-spacing: 0.005em;
   color: #475569;
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .photo-card .metadata {
@@ -632,6 +640,7 @@ a:hover,
   text-transform: uppercase;
   color: var(--muted);
   flex-wrap: wrap;
+  margin-top: auto;
 }
 
 .upload-preview {
@@ -710,23 +719,9 @@ a:hover,
 }
 
 .photo-card a {
-  margin-top: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem 1rem;
-  background: var(--accent);
-  color: white;
-  border-radius: 14px;
   text-decoration: none;
   font-weight: 700;
   transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.photo-card a:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .card-actions {
@@ -745,8 +740,9 @@ a:hover,
 
 .action-btn {
   flex: 1;
-  min-width: 100px;
-  padding: 0.6rem 0.8rem !important;
+  min-width: 0;
+  height: 50px;
+  padding: 0 0.8rem !important;
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
@@ -759,12 +755,26 @@ a:hover,
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
 .action-btn:hover {
   background: var(--accent);
   color: white;
   transform: translateY(-1px);
+}
+
+.view-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.view-btn:hover {
+  background: #1d4ed8;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .download-btn {
@@ -867,10 +877,9 @@ a:hover,
 
 .share-menu svg,
 .share-icons-row svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  filter: none;
+  display: block;
+  fill: currentColor;
+  pointer-events: none;
 }
 
 .share-icons-row > button:hover,
@@ -932,6 +941,24 @@ a:hover,
 .card-engagement-row .share-button-wrapper {
   position: relative;
   flex: 1 !important;
+  width: 100% !important;
+  height: 40px !important;
+  padding: 0.5rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  border-radius: 12px !important;
+  background: rgba(244, 114, 131, 0.1) !important;
+  color: #f47283 !important;
+  box-sizing: border-box;
+}
+
+.card-engagement-row .share-button-wrapper:hover {
+  background: rgba(244, 114, 131, 0.1) !important;
+  color: #f47283 !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .engagement-btn {
@@ -968,13 +995,17 @@ a:hover,
 }
 
 .card-engagement-row .share-btn {
-  background: rgba(244, 114, 131, 0.1) !important;
-  color: #f47283 !important;
+  background: transparent !important;
+  color: inherit !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
 }
 
 .card-engagement-row .share-btn:hover {
-  background: rgba(244, 114, 131, 0.1) !important;
-  color: #f47283 !important;
+  background: transparent !important;
+  color: inherit !important;
   transform: none !important;
   box-shadow: none !important;
 }
