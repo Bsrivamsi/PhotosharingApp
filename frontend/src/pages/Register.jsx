@@ -39,6 +39,7 @@ function Register() {
       const data = await response.json();
       localStorage.setItem('token', data.token);
       localStorage.setItem('username', data.username);
+      localStorage.setItem('userRole', data.role);
       navigate('/');
     } catch (error) {
       setMessage('Unable to reach server. Please ensure backend is running and try again.');

@@ -1,12 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaDownload, FaShare } from 'react-icons/fa';
 import { API_BASE } from '../api';
+import LikeButton from '../components/LikeButton';
+import CommentsSection from '../components/CommentsSection';
+import FollowButton from '../components/FollowButton';
+
+const SharePanel = lazy(() => import('../components/SharePanel'));
 
 const samplePhotos = [
   {
     id: 'sample-1',
     title: 'Mountain Sunrise',
     description: 'A crisp morning above the clouds.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Emma Johnson',
@@ -16,6 +23,7 @@ const samplePhotos = [
     id: 'sample-2',
     title: 'Autumn Lane',
     description: 'A golden drive through autumn trees.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Alex Carter',
@@ -25,6 +33,7 @@ const samplePhotos = [
     id: 'sample-3',
     title: 'Coastal Escape',
     description: 'A peaceful pier on a blue afternoon.',
+    category: 'Travel',
     thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Sarah Wilson',
@@ -34,6 +43,7 @@ const samplePhotos = [
     id: 'sample-4',
     title: 'Serene Kayaks',
     description: 'Still waters and colorful kayaks.',
+    category: 'Travel',
     thumbnailUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Michael Brown',
@@ -43,6 +53,7 @@ const samplePhotos = [
     id: 'sample-5',
     title: 'City Lights',
     description: 'A quiet evening in the city.',
+    category: 'Urban',
     thumbnailUrl: 'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=800',
     photoUrl: 'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=1600',
     uploader: 'Carson Lee',
@@ -52,6 +63,7 @@ const samplePhotos = [
     id: 'sample-6',
     title: 'Forest Walk',
     description: 'Sun rays through the trees.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Olivia Turner',
@@ -61,6 +73,7 @@ const samplePhotos = [
     id: 'sample-7',
     title: 'Sunset Coastline',
     description: 'Warm colors on the shore.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80',
     uploader: 'Emily Robinson',
@@ -70,6 +83,7 @@ const samplePhotos = [
     id: 'sample-8',
     title: 'Violet Bloom',
     description: 'Close-up of a spring flower.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=800&q=80',
     photoUrl: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=1600&q=80',
     uploader: 'David Miller',
@@ -79,6 +93,7 @@ const samplePhotos = [
     id: 'sample-9',
     title: 'Misty Mountains',
     description: 'Clouds rolling over a dramatic mountain range.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&w=800',
     photoUrl: 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&w=1600',
     uploader: 'Sophia Green',
@@ -88,6 +103,7 @@ const samplePhotos = [
     id: 'sample-10',
     title: 'Golden Desert',
     description: 'Soft dunes glowing during golden hour.',
+    category: 'Travel',
     thumbnailUrl: 'https://images.pexels.com/photos/248771/pexels-photo-248771.jpeg?auto=compress&cs=tinysrgb&w=800',
     photoUrl: 'https://images.pexels.com/photos/248771/pexels-photo-248771.jpeg?auto=compress&cs=tinysrgb&w=1600',
     uploader: 'Noah Adams',
@@ -97,6 +113,7 @@ const samplePhotos = [
     id: 'sample-11',
     title: 'Calm Lake',
     description: 'Mirror reflections on a still alpine lake.',
+    category: 'Nature',
     thumbnailUrl: 'https://images.pexels.com/photos/355423/pexels-photo-355423.jpeg?auto=compress&cs=tinysrgb&w=800',
     photoUrl: 'https://images.pexels.com/photos/355423/pexels-photo-355423.jpeg?auto=compress&cs=tinysrgb&w=1600',
     uploader: 'Ava Patel',
@@ -106,6 +123,7 @@ const samplePhotos = [
     id: 'sample-12',
     title: 'Neon Street',
     description: 'A rainy urban street lit by neon signs.',
+    category: 'Urban',
     thumbnailUrl: 'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=800',
     photoUrl: 'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1600',
     uploader: 'Liam Foster',
@@ -115,9 +133,10 @@ const samplePhotos = [
 
 function Gallery({ token, username }) {
   const [photos, setPhotos] = useState(samplePhotos);
+  const [allPhotos, setAllPhotos] = useState(samplePhotos);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
-  const [form, setForm] = useState({ title: '', description: '', file: null });
+  const [form, setForm] = useState({ title: '', description: '', category: '', file: null });
   const [descriptionEdited, setDescriptionEdited] = useState(false);
   const [photoMeta, setPhotoMeta] = useState({
     orientation: '',
@@ -132,6 +151,14 @@ function Gallery({ token, username }) {
   const [selectedPreviewUrl, setSelectedPreviewUrl] = useState('');
   const [visibleRows, setVisibleRows] = useState(2);
   const [cardsPerRow, setCardsPerRow] = useState(1);
+  const [shareMenuId, setShareMenuId] = useState(null);
+  const [shareMenuPlacement, setShareMenuPlacement] = useState({});
+  const [qrPhotoId, setQrPhotoId] = useState(null);
+  const [editFilters, setEditFilters] = useState({
+    brightness: 100,
+    contrast: 100,
+    saturate: 100,
+  });
   const cardGridRef = useRef(null);
   const scrollTrackRef = useRef(null);
 
@@ -158,13 +185,43 @@ function Gallery({ token, username }) {
     return oneLine.slice(0, 140);
   };
 
+  const getAutoCategory = (title, description) => {
+    const searchable = `${title || ''} ${description || ''}`.toLowerCase();
+
+    if (/(mountain|forest|lake|beach|coast|ocean|river|sunset|sunrise|nature|landscape|tree|sky|flower)/.test(searchable)) {
+      return 'Nature';
+    }
+    if (/(city|urban|street|building|road|night|neon|downtown)/.test(searchable)) {
+      return 'Urban';
+    }
+    if (/(portrait|person|people|selfie|face|model|wedding)/.test(searchable)) {
+      return 'People';
+    }
+    if (/(animal|wildlife|bird|cat|dog|pet|zoo)/.test(searchable)) {
+      return 'Wildlife';
+    }
+    if (/(food|drink|coffee|restaurant|meal|dessert)/.test(searchable)) {
+      return 'Food';
+    }
+    if (/(travel|trip|vacation|journey|adventure|kayak|pier|desert)/.test(searchable)) {
+      return 'Travel';
+    }
+
+    return 'General';
+  };
+
+  const previewCategory = form.category.trim() || getAutoCategory(form.title, form.description);
+
   const fetchPhotos = async () => {
     const response = await fetch(`${API_BASE}/photos`);
     const data = await response.json();
     if (Array.isArray(data) && data.length > 0) {
-      setPhotos([...samplePhotos, ...data]);
+      const mergedPhotos = [...samplePhotos, ...data];
+      setPhotos(mergedPhotos);
+      setAllPhotos(mergedPhotos);
     } else {
       setPhotos(samplePhotos);
+      setAllPhotos(samplePhotos);
     }
   };
 
@@ -409,6 +466,9 @@ function Gallery({ token, username }) {
     payload.append('file', form.file);
     payload.append('title', form.title);
     payload.append('description', form.description);
+    if (form.category.trim()) {
+      payload.append('category', form.category.trim());
+    }
 
     setUploading(true);
     const response = await fetch(`${API_BASE}/photos/upload`, {
@@ -427,7 +487,7 @@ function Gallery({ token, username }) {
     }
 
     setMessage('Uploaded successfully!');
-    setForm({ title: '', description: '', file: null });
+    setForm({ title: '', description: '', category: '', file: null });
     setDescriptionEdited(false);
     setPhotoMeta({
       orientation: '',
@@ -441,6 +501,68 @@ function Gallery({ token, username }) {
     });
     setSelectedPreviewUrl('');
     fetchPhotos();
+  };
+
+  const handleDownload = async (photoId, title) => {
+    try {
+      if (token) {
+        await fetch(`${API_BASE}/photos/${photoId}/download`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      } else {
+        await fetch(`${API_BASE}/photos/${photoId}/download`, { method: 'POST' });
+      }
+    } catch (error) {
+      console.error('Error recording download:', error);
+    }
+    // Trigger download
+    const link = document.createElement('a');
+    link.href = document.querySelector(`[data-photo-url="${photoId}"]`)?.src || '';
+    link.download = `${title}.jpg`;
+    link.click();
+  };
+
+  const handleShare = async (photoId) => {
+    try {
+      if (token) {
+        await fetch(`${API_BASE}/photos/${photoId}/share`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      } else {
+        await fetch(`${API_BASE}/photos/${photoId}/share`, { method: 'POST' });
+      }
+    } catch (error) {
+      console.error('Error recording share:', error);
+    }
+  };
+
+  const getShareMenuPlacement = (buttonEl) => {
+    if (!buttonEl || typeof window === 'undefined') {
+      return 'right';
+    }
+
+    const rect = buttonEl.getBoundingClientRect();
+    const estimatedMenuWidth = 300;
+    const estimatedMenuHeight = 220;
+    const spaceRight = window.innerWidth - rect.right;
+    const spaceLeft = rect.left;
+    const spaceTop = rect.top;
+
+    if (spaceRight >= estimatedMenuWidth) {
+      return 'right';
+    }
+
+    if (spaceLeft >= estimatedMenuWidth) {
+      return 'left';
+    }
+
+    if (spaceTop >= estimatedMenuHeight) {
+      return 'top';
+    }
+
+    return 'top';
   };
 
   const previewPhotos = sortedPhotos.slice(0, 10);
@@ -498,11 +620,53 @@ function Gallery({ token, username }) {
               <section className="upload-preview" aria-live="polite">
                 <p className="upload-preview-label">Auto thumbnail preview</p>
                 <article className="upload-preview-card">
-                  <img src={selectedPreviewUrl} alt="Selected upload preview" />
+                  <img
+                    src={selectedPreviewUrl}
+                    alt="Selected upload preview"
+                    style={{
+                      filter: `brightness(${editFilters.brightness}%) contrast(${editFilters.contrast}%) saturate(${editFilters.saturate}%)`,
+                    }}
+                  />
                   <div className="upload-preview-meta">
                     <h3>{form.title || 'Untitled photo'}</h3>
                     <p>{form.description || 'Add a description to help others understand your photo.'}</p>
+                    <div className="upload-preview-category-row">
+                      <span className="photo-category-badge">{previewCategory}</span>
+                      <small>{form.category.trim() ? 'Manual category' : 'Auto category preview'}</small>
+                    </div>
                     <span>{username || 'You'} • {new Date().toLocaleDateString()}</span>
+                    <div style={{ marginTop: '10px', display: 'grid', gap: '8px' }}>
+                      <label>
+                        Brightness: {editFilters.brightness}%
+                        <input
+                          type="range"
+                          min="60"
+                          max="140"
+                          value={editFilters.brightness}
+                          onChange={(e) => setEditFilters((prev) => ({ ...prev, brightness: Number(e.target.value) }))}
+                        />
+                      </label>
+                      <label>
+                        Contrast: {editFilters.contrast}%
+                        <input
+                          type="range"
+                          min="60"
+                          max="160"
+                          value={editFilters.contrast}
+                          onChange={(e) => setEditFilters((prev) => ({ ...prev, contrast: Number(e.target.value) }))}
+                        />
+                      </label>
+                      <label>
+                        Saturation: {editFilters.saturate}%
+                        <input
+                          type="range"
+                          min="60"
+                          max="160"
+                          value={editFilters.saturate}
+                          onChange={(e) => setEditFilters((prev) => ({ ...prev, saturate: Number(e.target.value) }))}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </article>
               </section>
@@ -529,10 +693,19 @@ function Gallery({ token, username }) {
               />
             </div>
             <div className="form-group">
+              <label>Category</label>
+              <input
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                placeholder="Enter a category or leave blank for auto category"
+              />
+              <small className="form-hint">If you leave this empty, the app will create an automatic category for the photo and show it on the Categories page and photo cards.</small>
+            </div>
+            <div className="form-group">
               <label>Photo file</label>
               <input
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,.jfif,.jfi,.png,.gif,.bmp,.webp,.svg,.ico,.tiff,.heic,.avif"
                 onChange={(e) => {
                   const nextFile = e.target.files?.[0] || null;
                   setDescriptionEdited(false);
@@ -556,6 +729,7 @@ function Gallery({ token, username }) {
                 <img src={photo.thumbnailUrl} alt={photo.title} />
                 <div className="all-photos-scroll-content">
                   <h3>{photo.title}</h3>
+                  <span className="photo-category-badge compact">{photo.category || 'General'}</span>
                   <p>{photo.uploader || 'Anonymous'}</p>
                 </div>
               </article>
@@ -570,18 +744,63 @@ function Gallery({ token, username }) {
             <div className="alert">No photos are available yet. Check back soon!</div>
           ) : (
             displayedPhotos.map((photo) => (
+              (() => {
+                const isDemoPhoto = String(photo.id).startsWith('sample-');
+                return (
               <article className="photo-card" key={photo.id}>
-                <img src={photo.thumbnailUrl} alt={photo.title} />
+                <img src={photo.thumbnailUrl} alt={photo.title} data-photo-url={photo.id} />
                 <div className="card-body">
+                  <span className="photo-category-badge">{photo.category || 'General'}</span>
                   <h3>{photo.title}</h3>
                   <p>{photo.description || 'No description provided.'}</p>
                   <div className="metadata">
                     <span>{photo.uploader || 'Anonymous'}</span>
                     <span>{photo.uploadedAt ? new Date(photo.uploadedAt).toLocaleDateString() : ''}</span>
                   </div>
-                  <a href={photo.photoUrl} target="_blank" rel="noreferrer">View full image</a>
+                  <div className="card-actions">
+                    <a href={photo.photoUrl} target="_blank" rel="noreferrer">View full image</a>
+                    <button onClick={() => handleDownload(photo.id, photo.title)} className="action-btn download-btn" title="Download photo">
+                      <FaDownload /> Download
+                    </button>
+                  </div>
+                  <div className="card-engagement-row">
+                    <div className="share-button-wrapper">
+                      <button 
+                        onClick={(event) => {
+                          if (!isDemoPhoto) {
+                            handleShare(photo.id);
+                          }
+                          const nextMenuId = shareMenuId === photo.id ? null : photo.id;
+                          if (nextMenuId) {
+                            const placement = getShareMenuPlacement(event.currentTarget);
+                            setShareMenuPlacement((prev) => ({ ...prev, [photo.id]: placement }));
+                          }
+                          setShareMenuId(nextMenuId);
+                        }} 
+                        className="engagement-btn share-btn icon-only" 
+                        title="Share photo"
+                      >
+                        <FaShare />
+                      </button>
+                      {shareMenuId === photo.id && (
+                        <Suspense fallback={<div className="share-menu" style={{minWidth: 'auto', padding: '0.5rem'}}>Loading...</div>}>
+                          <SharePanel
+                            photo={photo}
+                            qrPhotoId={qrPhotoId}
+                            setQrPhotoId={setQrPhotoId}
+                            placement={shareMenuPlacement[photo.id] || 'right'}
+                          />
+                        </Suspense>
+                      )}
+                    </div>
+                    <FollowButton targetUsername={photo.uploader} token={token} currentUsername={username} isDemo={isDemoPhoto} />
+                    <LikeButton photoId={photo.id} token={token} username={username} isDemo={isDemoPhoto} />
+                    <CommentsSection photoId={photo.id} token={token} username={username} compact={true} isDemo={isDemoPhoto} />
+                  </div>
                 </div>
               </article>
+                );
+              })()
             ))
           )}
         </div>

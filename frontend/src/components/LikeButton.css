@@ -1,0 +1,88 @@
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin: 0;
+  flex: 0 0 auto;
+  padding: 0.5rem 0.6rem !important;
+  background: rgba(255, 68, 88, 0.1);
+  color: #ff4458;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.like-button:hover {
+  background: rgba(255, 68, 88, 0.1);
+  color: #ff4458;
+  transform: none;
+  box-shadow: none;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: inherit;
+  padding: 0;
+  min-height: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+  outline: none;
+  box-shadow: none;
+}
+
+.like-btn:focus,
+.like-btn:focus-visible,
+.like-btn:active,
+.like-btn:hover {
+  background: transparent !important;
+  color: inherit !important;
+  transform: none !important;
+  outline: none;
+  box-shadow: none;
+}
+
+.like-button:hover .like-btn {
+  transform: scale(1);
+}
+
+.like-btn.liked {
+  color: inherit;
+}
+
+.like-count {
+  font-size: 12px;
+  color: inherit;
+  font-weight: 600;
+}
+
+.card-engagement-row .like-button {
+  flex: 1 !important;
+  width: 100% !important;
+  height: 40px !important;
+  padding: 0.5rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 12px !important;
+  gap: 0.4rem !important;
+  background: rgba(255, 68, 88, 0.1) !important;
+  color: #ff4458 !important;
+}
+
+.card-engagement-row .like-button:hover {
+  background: rgba(255, 68, 88, 0.1) !important;
+  color: #ff4458 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
