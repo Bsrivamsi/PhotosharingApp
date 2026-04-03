@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaSignOutAlt, FaCog } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaCog, FaBars, FaTimes } from 'react-icons/fa';
 import { API_BASE } from './api';
 
 const Login = lazy(() => import('./pages/Login'));
@@ -32,6 +32,8 @@ function App() {
   const username = localStorage.getItem('username');
   const userRole = localStorage.getItem('userRole');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMenu = () => setMobileMenuOpen(false);
   const [headerProfilePhoto, setHeaderProfilePhoto] = useState('');
   const [avatarVersion, setAvatarVersion] = useState(localStorage.getItem('profilePhotoVersion') || '0');
   const [avatarLoadError, setAvatarLoadError] = useState(false);
@@ -227,13 +229,21 @@ function App() {
             </Link>
             <p className="brand-tagline">Frame moments. Share stories.</p>
           </div>
-          <nav>
-            <Link to="/">Gallery</Link>
-            <Link to="/categories">Categories</Link>
-            <Link to="/about">About</Link>
+          <button
+            className="hamburger-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {mobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          </button>
+          {mobileMenuOpen && <div className="nav-overlay" onClick={closeMenu} />}
+          <nav className={mobileMenuOpen ? 'nav-open' : ''}>
+            <Link to="/" onClick={closeMenu}>Gallery</Link>
+            <Link to="/categories" onClick={closeMenu}>Categories</Link>
+            <Link to="/about" onClick={closeMenu}>About</Link>
             {token ? (
               <>
-                {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MODERATOR') && <Link to="/admin-dashboard">Admin</Link>}
+                {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MODERATOR') && <Link to="/admin-dashboard" onClick={closeMenu}>Admin</Link>}
                 <div className="profile-menu-container">
                   <button 
                     className="profile-photo-btn" 
@@ -252,17 +262,17 @@ function App() {
                   </button>
                   {showProfileMenu && (
                     <div className="profile-dropdown">
-                      <Link to="/profile"><FaUser /> My Profile</Link>
-                      <Link to="/profile"><FaCog /> Account Settings</Link>
-                      <button onClick={logout}><FaSignOutAlt /> Logout</button>
+                      <Link to="/profile" onClick={closeMenu}><FaUser /> My Profile</Link>
+                      <Link to="/profile" onClick={closeMenu}><FaCog /> Account Settings</Link>
+                      <button onClick={() => { closeMenu(); logout(); }}><FaSignOutAlt /> Logout</button>
                     </div>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
+                <Link to="/login" onClick={closeMenu}>Login</Link>
+                <Link to="/register" onClick={closeMenu}>Register</Link>
               </>
             )}
           </nav>

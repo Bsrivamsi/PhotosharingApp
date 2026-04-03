@@ -1114,11 +1114,6 @@ button:hover {
     padding: 0.5rem;
   }
 
-  .topbar {
-    flex-direction: column;
-    text-align: center;
-  }
-
   .quote-banner {
     margin: 0.8rem 1rem 0;
     border-radius: 16px;
@@ -1206,5 +1201,285 @@ button:hover {
   .form-panel,
   .photo-card {
     border-radius: 22px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   HAMBURGER BUTTON  (hidden on desktop)
+───────────────────────────────────────────── */
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  color: #0f172a;
+  min-height: auto;
+  width: auto;
+  border-radius: 10px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+  background: rgba(0, 0, 0, 0.07);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Invisible full-screen overlay that closes the nav when tapped */
+.nav-overlay {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────
+   TABLET  (≤ 900px)
+───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav {
+    gap: 0.45rem;
+  }
+
+  nav a {
+    font-size: 0.88rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .community-panel {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   MOBILE  (≤ 768px)  — hamburger ON
+───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Show the hamburger toggle */
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Topbar: keep it as one row, brand left + hamburger right */
+  .topbar {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    padding: 0.7rem 1rem !important;
+    text-align: left !important;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .brand-block {
+    flex: 1;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  /* Nav: hidden by default, slides down as a vertical panel when .nav-open */
+  nav {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 199;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 0 0 22px 22px;
+    border-top: 1px solid rgba(203, 213, 225, 0.35);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+    padding: 0.75rem 0.75rem 1rem;
+    gap: 0.25rem;
+  }
+
+  nav.nav-open {
+    display: flex;
+  }
+
+  nav a {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #0f172a;
+    background: transparent;
+    transition: background 0.18s;
+  }
+
+  nav a:hover {
+    background: rgba(59, 130, 246, 0.09);
+  }
+
+  /* Profile button inside mobile nav — full-width row */
+  nav .profile-menu-container {
+    width: 100%;
+  }
+
+  nav .profile-photo-btn {
+    width: 100% !important;
+    border-radius: 12px !important;
+    justify-content: flex-start !important;
+    padding: 0.75rem 1rem !important;
+    gap: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a !important;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  nav .profile-photo-btn img {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+
+  /* Profile dropdown inside nav on mobile */
+  nav .profile-dropdown {
+    position: static !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    margin-top: 0.25rem;
+    background: rgba(241, 245, 249, 0.9);
+  }
+
+  /* Overlay — transparent, closes mobile nav on outside tap */
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 198;
+    background: transparent;
+  }
+
+  /* Background gallery: 2 columns on narrow mobile */
+  .background-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.4rem !important;
+    padding: 0.4rem !important;
+  }
+
+  /* Page container narrower padding */
+  .page-container {
+    padding: 1rem !important;
+  }
+
+  /* Community panel: stack vertically */
+  .community-panel {
+    flex-direction: column !important;
+    gap: 1.5rem;
+  }
+
+  /* Card grid: single column */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Quote banner tighter */
+  .quote-banner {
+    margin: 0.6rem 0.75rem 0 !important;
+    border-radius: 14px !important;
+    padding: 0.8rem 1rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  /* Hero section smaller */
+  .hero {
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .hero-copy {
+    padding: 1.6rem 1.2rem !important;
+  }
+
+  /* Footer full width */
+  .footer {
+    width: calc(100% - 1.5rem) !important;
+    margin: 0.75rem auto 1.25rem !important;
+    border-radius: 16px;
+  }
+
+  /* Section headings */
+  .section-heading {
+    font-size: 1.6rem;
+  }
+
+  /* Form panels */
+  .form-panel {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  /* Upload preview: stack image above meta */
+  .upload-preview-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Scroll cards narrower */
+  .all-photos-scroll-card {
+    min-width: 170px;
+    max-width: 170px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SMALL PHONES  (≤ 480px)
+───────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .brand {
+    font-size: 1.15rem;
+  }
+
+  .brand-logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .background-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.3rem !important;
+    padding: 0.3rem !important;
+  }
+
+  .page-container {
+    padding: 0.75rem !important;
+  }
+
+  .topbar {
+    padding: 0.6rem 0.75rem !important;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Table in admin dashboard: allow horizontal scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tighter engagement row on tiny screens */
+  .card-engagement-row {
+    gap: 0.3rem;
+  }
+
+  .engagement-btn {
+    font-size: 0.78rem !important;
+    padding: 0.4rem !important;
+    height: 36px !important;
   }
 }
