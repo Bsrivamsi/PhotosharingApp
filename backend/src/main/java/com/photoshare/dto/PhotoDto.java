@@ -10,6 +10,12 @@ public class PhotoDto {
     private String thumbnailUrl;
     private String photoUrl;
     private LocalDateTime uploadedAt;
+    private String category;
+    private Integer shareCount;
+    private Integer downloadCount;
+    private Long likeCount;
+    private Long commentCount;
+    private Boolean isLikedByCurrentUser;
 
     public PhotoDto() {
     }
@@ -22,6 +28,19 @@ public class PhotoDto {
         this.thumbnailUrl = thumbnailUrl;
         this.photoUrl = photoUrl;
         this.uploadedAt = uploadedAt;
+    }
+
+    public PhotoDto(Long id, String title, String description, String uploader, String thumbnailUrl, String photoUrl, LocalDateTime uploadedAt, String category, Integer shareCount, Integer downloadCount) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.uploader = uploader;
+        this.thumbnailUrl = thumbnailUrl;
+        this.photoUrl = photoUrl;
+        this.uploadedAt = uploadedAt;
+        this.category = category;
+        this.shareCount = shareCount;
+        this.downloadCount = downloadCount;
     }
 
     public Long getId() {
@@ -78,5 +97,53 @@ public class PhotoDto {
 
     public void setUploadedAt(LocalDateTime uploadedAt) {
         this.uploadedAt = uploadedAt;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(Integer shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public Integer getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Integer downloadCount) {
+        this.downloadCount = downloadCount;
+    }
+
+    public Long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Boolean getIsLikedByCurrentUser() {
+        return isLikedByCurrentUser;
+    }
+
+    public void setIsLikedByCurrentUser(Boolean isLikedByCurrentUser) {
+        this.isLikedByCurrentUser = isLikedByCurrentUser;
     }
 }

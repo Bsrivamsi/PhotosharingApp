@@ -1,13 +1,19 @@
 package com.photoshare.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +33,13 @@ public class User implements UserDetails {
     private String password;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+    
+    private String profilePhoto;
+    private String profileBio;
+    private String role = "ROLE_USER";
+    private Boolean isActive = true;
+    private LocalDateTime suspensionEndDate;
+    private LocalDateTime lastLoginAt;
 
     public User() {
     }
@@ -77,9 +90,57 @@ public class User implements UserDetails {
         this.createdAt = createdAt;
     }
 
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getProfileBio() {
+        return profileBio;
+    }
+
+    public void setProfileBio(String profileBio) {
+        this.profileBio = profileBio;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public LocalDateTime getSuspensionEndDate() {
+        return suspensionEndDate;
+    }
+
+    public void setSuspensionEndDate(LocalDateTime suspensionEndDate) {
+        this.suspensionEndDate = suspensionEndDate;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
@@ -99,6 +160,10 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        if (!isActive) return false;
+        if (suspensionEndDate != null && LocalDateTime.now().isBefore(suspensionEndDate)) {
+            return false;
+        }
         return true;
     }
 }

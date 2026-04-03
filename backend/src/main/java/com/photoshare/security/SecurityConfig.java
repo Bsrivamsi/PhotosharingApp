@@ -55,6 +55,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/admin/**").authenticated()  // Explicitly require authentication for admin
+                    .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                     .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())
